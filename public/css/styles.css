@@ -1,0 +1,474 @@
+/* ETHER • TAROT
+   Main stylesheet */
+
+:root {
+    --bg-color: #0e0e0e;
+    --text-color: #f5f5f5;
+    --accent-color: #888888;
+    --card-border: #333333;
+    --card-bg: #161616;
+    --input-bg: #1a1a1a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Victor Mono', monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 1rem;
+}
+
+h1 {
+    font-weight: 200;
+    font-size: 2.5rem;
+    letter-spacing: 1.5rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.auth-status {
+    font-style: italic;
+    margin-bottom: 1rem;
+    font-weight: 200;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.query-input {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 2rem;
+}
+
+.query-input textarea {
+    width: 100%;
+    padding: 1rem;
+    height: 100px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    font-family: 'Victor Mono', monospace;
+    resize: none;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.query-input textarea:focus {
+    outline: none;
+    border-color: #bbbbbb;
+    box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+
+.interpretation-style {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+}
+
+.interpretation-style label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.interpretation-style input {
+    margin-right: 0.5rem;
+}
+
+.spread-selector {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.spread-type {
+    background: none;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    padding: 0.5rem 1.5rem;
+    margin: 0 0.5rem;
+    font-family: 'Victor Mono', monospace;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.spread-type:hover, .spread-type.active {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.tarot-spread {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    min-height: 40vh;
+}
+
+.card {
+    width: 160px;
+    height: 280px;
+    border: 1px solid var(--card-border);
+    background-color: var(--card-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.5s;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.card-placeholder {
+    font-size: 1.5rem;
+    font-weight: 200;
+}
+
+.card-title {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
+    opacity: 0.8;
+    text-align: center;
+    width: 100%;
+    padding: 0 0.5rem;
+}
+
+.card-number {
+    position: absolute;
+    top: 1rem;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.card-art {
+    width: 100px;
+    height: 100px;
+    border: 1px solid var(--accent-color);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+}
+
+.interpretation {
+    margin-top: 2rem;
+    max-width: 600px;
+    text-align: center;
+    opacity: 0.9;
+    font-weight: 200;
+    position: relative;
+    padding: 2rem;
+    border: 1px solid var(--accent-color);
+    background-color: rgba(0,0,0,0.2);
+}
+
+.reading-theme {
+    margin-bottom: 1rem;
+    font-style: italic;
+    opacity: 0.7;
+}
+
+.actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.paywall-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1001;
+    justify-content: center;
+    align-items: center;
+}
+
+.paywall-content {
+    background: var(--card-bg);
+    max-width: 500px;
+    padding: 2rem;
+    border: 1px solid var(--accent-color);
+    text-align: center;
+}
+
+.paywall-title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.3rem;
+}
+
+.deeper-insight-button {
+    margin-top: 1rem;
+    cursor: pointer;
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+button {
+    background: none;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    padding: 0.5rem 1.5rem;
+    font-family: 'Victor Mono', monospace;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    font-size: 0.8rem;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+}
+
+.journal {
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 800px;
+}
+
+.journal h2 {
+    font-weight: 200;
+    letter-spacing: 0.5rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.reading-list {
+    list-style: none;
+    border-top: 1px solid var(--accent-color);
+}
+
+.reading-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--accent-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.reading-date {
+    opacity: 0.6;
+}
+
+.reading-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.reading-actions button {
+    padding: 0.3rem 0.7rem;
+    font-size: 0.7rem;
+}
+
+footer {
+    margin-top: 3rem;
+    text-align: center;
+    font-size: 0.8rem;
+    opacity: 0.6;
+}
+
+.login-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    padding: 0.5rem 1rem;
+    background: none;
+    border: 1px solid var(--accent-color);
+    color: var(--text-color);
+    font-family: 'Victor Mono', monospace;
+    cursor: pointer;
+}
+
+/* Art Deco Ornamental Elements */
+.ornament {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0.7;
+}
+
+.ornament::before, .ornament::after {
+    content: "✧";
+    margin: 0 1rem;
+}
+
+.ornament span {
+    margin: 0 0.5rem;
+}
+
+/* Trends Section */
+.trends {
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 800px;
+    border-top: 1px solid var(--accent-color);
+    padding-top: 2rem;
+}
+
+.trends h2 {
+    font-weight: 200;
+    letter-spacing: 0.5rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.trend-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.trend-tag {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--accent-color);
+    font-size: 0.8rem;
+    opacity: 0.8;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.trend-tag:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+}
+
+/* Modal for displaying full reading */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    z-index: 1000;
+    overflow: auto;
+    padding: 3rem;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: auto;
+    padding: 2rem;
+    max-width: 800px;
+    border: 1px solid var(--accent-color);
+    position: relative;
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Loading indicator */
+.loading {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: var(--accent-color);
+    animation: spin 1s ease-in-out infinite;
+    margin: 1rem auto;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Premium user indicator */
+body.premium-user:after {
+    content: "PREMIUM";
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 0.7rem;
+    color: gold;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8rem;
+        letter-spacing: 0.8rem;
+    }
+    
+    .tarot-spread {
+        gap: 1rem;
+    }
+    
+    .card {
+        width: 120px;
+        height: 210px;
+    }
+    
+    .interpretation-style {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}

@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHER • TAROT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,200;0,400;0,700;1,200&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0e0e0e;
+            --text-color: #f5f5f5;
+            --accent-color: #888888;
+            --card-border: #333333;
+            --card-bg: #161616;
+            --input-bg: #1a1a1a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Victor Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 1rem;
+        }
+        
+        h1 {
+            font-weight: 200;
+            font-size: 2.5rem;
+            letter-spacing: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .auth-status {
+            font-style: italic;
+            margin-bottom: 1rem;
+            font-weight: 200;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .query-input {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+        
+        .query-input textarea {
+            width: 100%;
+            padding: 1rem;
+            height: 100px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            font-family: 'Victor Mono', monospace;
+            resize: none;
+            margin-bottom: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .query-input textarea:focus {
+            outline: none;
+            border-color: #bbbbbb;
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+        
+        .interpretation-style {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+        
+        .interpretation-style label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .interpretation-style input {
+            margin-right: 0.5rem;
+        }
+        
+        .spread-selector {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .spread-type {
+            background: none;
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            padding: 0.5rem 1.5rem;
+            margin: 0 0.5rem;
+            font-family: 'Victor Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .spread-type:hover, .spread-type.active {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        
+        .tarot-spread {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            min-height: 40vh;
+        }
+        
+        .card {
+            width: 160px;
+            height: 280px;
+            border: 1px solid var(--card-border);
+            background-color: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.5s;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .card-placeholder {
+            font-size: 1.5rem;
+            font-weight: 200;
+        }
+        
+        .card-title {
+            position: absolute;
+            bottom: 1rem;
+            font-size: 0.8rem;
+            letter-spacing: 0.2rem;
+            text-transform: uppercase;
+            opacity: 0.8;
+            text-align: center;
+            width: 100%;
+            padding: 0 0.5rem;
+        }
+        
+        .card-number {
+            position: absolute;
+            top: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+        
+        .card-art {
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--accent-color);
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.7;
+        }
+        
+        .interpretation {
+            margin-top: 2rem;
+            max-width: 600px;
+            text-align: center;
+            opacity: 0.9;
+            font-weight: 200;
+            position: relative;
+            padding: 2rem;
+            border: 1px solid var(--accent-color);
+            background-color: rgba(0,0,0,0.2);
+        }
+        
+        .reading-theme {
+            margin-bottom: 1rem;
+            font-style: italic;
+            opacity: 0.7;
+        }
+        
+        .actions {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .paywall-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1001;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .paywall-content {
+            background: var(--card-bg);
+            max-width: 500px;
+            padding: 2rem;
+            border: 1px solid var(--accent-color);
+            text-align: center;
+        }
+        
+        .paywall-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.3rem;
+        }
+        
+        .deeper-insight-button {
+            margin-top: 1rem;
+            cursor: pointer;
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        button {
+            background: none;
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            padding: 0.5rem 1.5rem;
+            font-family: 'Victor Mono', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--text-color);
+            color: var(--bg-color);
+        }
+        
+        .journal {
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .journal h2 {
+            font-weight: 200;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        .reading-list {
+            list-style: none;
+            border-top: 1px solid var(--accent-color);
+        }
+        
+        .reading-item {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--accent-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        
+        .reading-date {
+            opacity: 0.6;
+        }
+        
+        .reading-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .reading-actions button {
+            padding: 0.3rem 0.7rem;
+            font-size: 0.7rem;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .login-btn {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0.5rem 1rem;
+            background: none;
+            border: 1px solid var(--accent-color);
+            color: var(--text-color);
+            font-family: 'Victor Mono', monospace;
+            cursor: pointer;
+        }
+
+        /* Art Deco Ornamental Elements */
+        .ornament {
+            margin: 1rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.7;
+        }
+
+        .ornament::before, .ornament::after {
+            content: "✧";
+            margin: 0 1rem;
+        }
+
+        .ornament span {
+            margin: 0 0.5rem;
+        }
+        
+        /* Trends Section */
+        .trends {
+            margin-top: 3rem;
+            width: 100%;
+            max-width: 800px;
+            border-top: 1px solid var(--accent-color);
+            padding-top: 2rem;
+        }
+        
+        .trends h2 {
+            font-weight: 200;
+            letter-spacing: 0.5rem;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+        
+        .trend-tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .trend-tag {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--accent-color);
+            font-size: 0.8rem;
+            opacity: 0.8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .trend-tag:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+        }
+        
+        /* Modal for displaying full reading */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            overflow: auto;
+            padding: 3rem;
+        }
+        
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: auto;
+            padding: 2rem;
+            max-width: 800px;
+            border: 1px solid var(--accent-color);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8rem;
+                letter-spacing: 0.8rem;
+            }
+            
+            .tarot-spread {
+                gap: 1rem;
+            }
+            
+            .card {
+                width: 120px;
+                height: 210px;
+            }
+            
+            .interpretation-style {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="login-btn">LOGIN</button>
+    
+    <header>
+        <h1>ETHER • TAROT</h1>
+        <div class="ornament">
+            <span>★</span><span>✧</span><span>★</span>
+        </div>
+        <div class="auth-status">Not signed in</div>
+    </header>
+    
+    <main>
+        <div class="query-input">
+            <textarea placeholder="What question or topic would you like insight on? (e.g., love, career, personal growth)"></textarea>
+            
+            <div class="interpretation-style">
+                <label>
+                    <input type="radio" name="style" value="mystical" checked>
+                    Mystical
+                </label>
+                <label>
+                    <input type="radio" name="style" value="analytical">
+                    Analytical
+                </label>
+                <label>
+                    <input type="radio" name="style" value="poetic">
+                    Poetic
+                </label>
+                <label>
+                    <input type="radio" name="style" value="direct">
+                    Direct
+                </label>
+                <label>
+                    <input type="radio" name="style" value="psychological">
+                    Psychological
+                </label>
+            </div>
+        </div>
+        
+        <div class="spread-selector">
+            <button class="spread-type active">SINGLE</button>
+            <button class="spread-type">THREE</button>
+            <button class="spread-type">FIVE</button>
+        </div>
+        
+        <div class="tarot-spread">
+            <div class="card">
+                <div class="card-number">XII</div>
+                <div class="card-art">✦</div>
+                <div class="card-title">The Hanged Man</div>
+            </div>
+        </div>
+        
+        <div class="interpretation">
+            <div class="reading-theme">Theme: "New beginnings and opportunities"</div>
+            Surrendering to the unknown reveals new perspectives. What appears to be sacrifice often becomes the path to enlightenment. Your current situation may require you to let go of control and trust in the process. This surrender will ultimately lead to wisdom and a new way of seeing.
+            <div class="deeper-insight-button">Seek deeper insight...</div>
+        </div>
+        
+        <div class="actions">
+            <button id="new-reading-btn">New Reading</button>
+            <button id="draw-cards-btn">Draw Cards</button>
+            <button id="save-reading-btn">Save Reading</button>
+        </div>
+        
+        <div class="journal">
+            <h2>Journal</h2>
+            <ul class="reading-list" id="reading-journal">
+                <li class="reading-item">
+                    <span>Three Card Reading: The Fool, The Magician, The High Priestess</span>
+                    <div class="reading-meta">
+                        <span class="reading-date">15.04.2025</span>
+                        <div class="reading-actions">
+                            <button class="view-reading">View</button>
+                            <button class="delete-reading">Delete</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="reading-item">
+                    <span>Single Card Reading: The Tower</span>
+                    <div class="reading-meta">
+                        <span class="reading-date">10.04.2025</span>
+                        <div class="reading-actions">
+                            <button class="view-reading">View</button>
+                            <button class="delete-reading">Delete</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="trends">
+            <h2>Recurring Themes</h2>
+            <div class="trend-tags">
+                <div class="trend-tag">Transformation</div>
+                <div class="trend-tag">New Beginnings</div>
+                <div class="trend-tag">Spiritual Growth</div>
+                <div class="trend-tag">Relationships</div>
+                <div class="trend-tag">Career</div>
+                <div class="trend-tag">Self-Discovery</div>
+            </div>
+        </div>
+    </main>
+    
+    <div id="reading-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Reading Details</h2>
+            <div class="modal-date">15.04.2025</div>
+            <div class="modal-query">Query: "What should I focus on in my career right now?"</div>
+            <div class="modal-spread-type">Three Card Reading</div>
+            <div class="modal-cards">
+                <p>The Fool - New beginnings, taking a leap of faith</p>
+                <p>The Magician - Manifestation, utilizing your skills</p>
+                <p>The High Priestess - Intuition, hidden knowledge</p>
+            </div>
+            <div class="modal-interpretation">
+                The combination of these cards suggests that you're at a point where taking a new direction (The Fool) would benefit you. You have all the necessary skills and resources (The Magician) to succeed, but you should also trust your intuition (The High Priestess) to guide your decisions rather than just relying on logical thinking.
+            </div>
+        </div>
+    </div>
+    
+    <div id="paywall-overlay" class="paywall-overlay">
+        <div class="paywall-content">
+            <div class="paywall-title">DEEPER INSIGHTS AWAIT</div>
+            <p>Unlock premium GPT-4o insights with our subscription:</p>
+            <ul style="text-align: left; margin: 1rem 0;">
+                <li>Advanced AI-powered in-depth interpretations</li>
+                <li>Direct integration with OpenAI's GPT-4o Mini</li>
+                <li>Personalized psychological analysis</li>
+                <li>Unlimited premium readings</li>
+                <li>Exclusive spreads and interpretation styles</li>
+                <li>Save unlimited readings to your journal</li>
+            </ul>
+            <button id="subscribe-button">Subscribe - $9.99/month</button>
+            <div style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">
+                <a href="#" id="close-paywall">Return to free reading</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="ornament">
+            <span>✧</span><span>✦</span><span>✧</span>
+        </div>
+        <p>© 2025 ETHER • TAROT</p>
+    </footer>
+
+    <script>
+        // OpenAI API configuration
+        const OPENAI_API_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+        let OPENAI_API_KEY = ''; // This should be set after authentication
+        
+        // Okta configuration
+        const oktaConfig = {
+            clientId: 'YOUR_OKTA_CLIENT_ID',
+            issuer: 'https://YOUR_OKTA_DOMAIN/oauth2/default',
+            redirectUri: window.location.origin + '/tarot.html',
+            scopes: ['openid', 'profile', 'email'],
+        };
+        
+        // Card data with meanings, suitable for different interpretive styles
+        const cardData = [
+            { 
+                number: 'O', 
+                title: 'The Fool',
+                meanings: {
+                    mystical: "You stand at the precipice of a new spiritual journey. The cosmos beckons you to take a leap of faith into the unknown abyss, where your soul will be transformed.",
+                    analytical: "This card represents new beginnings and potential. Consider what opportunities you may be overlooking due to fear or overthinking.",
+                    poetic: "Upon the cliff's edge, with flowers in hand, you dance with possibility. The void below is not emptiness, but unwritten verses of your life's poem.",
+                    direct: "Take the risk. The opportunity in front of you is worth pursuing despite your fears. Trust yourself and move forward.",
+                    psychological: "The Fool represents your willingness to embrace vulnerability and uncertainty. Consider where your ego might be preventing growth through its fear of appearing naive."
+                },
+                keywords: ["beginnings", "innocence", "spontaneity", "free spirit"]
+            },
+            { 
+                number: 'I', 
+                title: 'The Magician',
+                meanings: {
+                    mystical: "The cosmic energies flow through you as a conduit between realms. You possess the sacred ability to manifest ethereal forces into material reality.",
+                    analytical: "You currently have all the tools and resources needed to achieve your goals. Focus on utilizing them effectively rather than seeking more.",
+                    poetic: "Heaven and Earth meet in your outstretched hands. The four elements dance at your command, spinning dreams into the tapestry of existence.",
+                    direct: "Use the skills you already have. You're capable of making this happen now without waiting for better circumstances.",
+                    psychological: "The Magician represents your sense of agency and capability. Examine where you might be overlooking your own power or attributing your successes to luck rather than skill."
+                },
+                keywords: ["manifestation", "resourcefulness", "power", "inspired action"]
+            },
+            { 
+                number: 'II', 
+                title: 'The High Priestess',
+                meanings: {
+                    mystical: "Beyond the veil of consciousness lies the sacred feminine mysteries. The High Priestess guards the threshold between worlds, inviting you to explore the depths of cosmic wisdom.",
+                    analytical: "Your intuition is providing valuable insights that logical thinking cannot access. Pay attention to subtle patterns and subconscious knowledge.",
+                    poetic: "Between light and shadow, she sits in silent knowing. The moon's reflection in still waters speaks volumes to those who listen with the heart.",
+                    direct: "Trust your gut feelings. You already know the answer but are ignoring your intuition. Stop overthinking.",
+                    psychological: "The High Priestess represents your connection to the collective unconscious and intuitive mind. Consider where you might be overvaluing rational thought at the expense of intuitive understanding."
+                },
+                keywords: ["intuition", "unconscious", "inner voice", "divine feminine"]
+            },
+            { 
+                number: 'III', 
+                title: 'The Empress',
+                meanings: {
+                    mystical: "The divine feminine creator breathes life into all things. Through her, the universe expresses its boundless fertility and nurturing essence.",
+                    analytical: "Your creative projects are ready to develop and flourish. Now is an excellent time for growth, creation, and nurturing endeavors.",
+                    poetic: "In her garden of earthly delights, abundance blooms eternal. Her gentle hands both cradle life and set it free to grow wild under the loving sun.",
+                    direct: "Create what you've been thinking about. The conditions are fertile for your projects to succeed. Also consider if parenting or nurturing relationships need attention.",
+                    psychological: "The Empress represents your capacity for unconditional love and creative expression. Reflect on whether you're allowing yourself to receive nurturing as well as provide it to others."
+                },
+                keywords: ["femininity", "beauty", "nature", "abundance", "nurturing"]
+            },
+            { 
+                number: 'IV', 
+                title: 'The Emperor',
+                meanings: {
+                    mystical: "The cosmic architect establishes order from chaos. His throne rests upon the bedrock of universal law, a testament to the sacred masculine principle.",
+                    analytical: "Structure and planning will serve you well now. Consider implementing systems or seeking mentorship from established authorities in your field.",
+                    poetic: "Stone and steel, mountains fashioned into steps. His kingdom rises not through chance but through measured will and the alchemy of discipline.",
+                    direct: "Take charge of the situation. Establish clear boundaries and rules. You need more structure, not more freedom right now.",
+                    psychological: "The Emperor represents your relationship with authority and order. Examine how your early experiences with father figures or authority might be influencing your current approach to leadership."
+                },
+                keywords: ["authority", "structure", "control", "leadership", "stability"]
+            },
+            { 
+                number: 'V', 
+                title: 'The Hierophant',
+                meanings: {
+                    mystical: "The bridge between mortal understanding and divine wisdom stands before you. Through sacred tradition and ritual, transcendent truth becomes accessible.",
+                    analytical: "Consider seeking guidance from established institutions or mentors. Traditional approaches may provide the structure needed for your current situation.",
+                    poetic: "Ancient words echo through hallowed halls, carrying whispers of those who walked before. In the patterns of tradition, find not chains, but the map left by countless seekers.",
+                    direct: "Look to established methods or experts for guidance. This isn't the time to reinvent the wheel. Education or training would be valuable now.",
+                    psychological: "The Hierophant represents your relationship with social structures and collective wisdom. Consider how you balance conformity with individual expression in your life."
+                },
+                keywords: ["tradition", "conformity", "morality", "ethics", "education"]
+            },
+            { 
+                number: 'VI', 
+                title: 'The Lovers',
+                meanings: {
+                    mystical: "Divine union of opposites reveals the sacred truth: that separation is illusion. Through the alchemical marriage, fragmented aspects of consciousness become whole.",
+                    analytical: "You face an important decision that requires you to align your choices with your authentic values. Consider what you truly want, not just what seems logical.",
+                    poetic: "Two rivers flowing into one sea, separate journeys meeting in sacred confluence. Heaven blesses the heart's true choice when it honors both desire and higher purpose.",
+                    direct: "Make your choice based on what you truly value, not what others expect. A relationship or partnership requires honest communication now.",
+                    psychological: "The Lovers represents integration of different aspects of self and the formation of meaningful bonds with others. Examine where you might be projecting disowned parts of yourself onto partners or significant relationships."
+                },
+                keywords: ["partnerships", "duality", "union", "choice", "alignment"]
+            },
+            { 
+                number: 'VII', 
+                title: 'The Chariot',
+                meanings: {
+                    mystical: "Opposing cosmic forces yield to your will as you navigate the astral currents. Victory comes through maintaining balance amidst contradictory energies.",
+                    analytical: "Determination and willpower will help you overcome the obstacles in your path. Stay focused on your goal despite competing priorities or distractions.",
+                    poetic: "Light and shadow steeds, harnessed by your resolve, carry you beyond the boundaries of limitation. The stars make way for those who command their course with certainty.",
+                    direct: "Push forward with determination. You can overcome these obstacles through willpower and focus. Don't let yourself get distracted from your main goal.",
+                    psychological: "The Chariot represents your ability to assert control over opposing urges and harness them productively. Consider where internal conflicts might actually be providing the creative tension needed for progress."
+                },
+                keywords: ["control", "willpower", "victory", "assertion", "determination"]
+            },
+            { 
+                number: 'VIII', 
+                title: 'Strength',
+                meanings: {
+                    mystical: "The primal force within you bows to the higher wisdom of your divine nature. Through gentle persistence, the wild cosmos yields its secrets and power.",
+                    analytical: "Inner strength and patience are more effective now than forceful action. Cultivate resilience through compassionate self-discipline rather than domination.",
+                    poetic: "The lion's roar silenced not by chains, but by the quiet courage of an open heart. Wild forces bow before the power of gentle persistence and boundless compassion.",
+                    direct: "Handle this situation with patience and calm confidence instead of aggression. Your inner strength is more powerful than force.",
+                    psychological: "Strength represents the integration of primal instincts with higher consciousness. Examine how you might better channel your passions rather than suppressing or being controlled by them."
+                },
+                keywords: ["inner strength", "patience", "compassion", "soft control", "courage"]
+            },
+            { 
+                number: 'IX', 
+                title: 'The Hermit',
+                meanings: {
+                    mystical: "The sacred flame of inner wisdom illuminates your solitary path through the darkness. In contemplative silence, the voice of the universe becomes clear.",
+                    analytical: "A period of introspection would be valuable now. Consider taking time alone to reflect and develop greater self-understanding before making decisions.",
+                    poetic: "Upon the mountain's quiet peak, a single light defies the darkness. Through solitude, the soul discovers it is never truly alone but connected to the ageless stars.",
+                    direct: "Take some time alone to think. You need space from others to gain perspective. The answers you seek are within you, not in external advice.",
+                    psychological: "The Hermit represents the individuation process and the importance of internal authority. Consider where you might be seeking external validation rather than trusting your own inner guidance."
+                },
+                keywords: ["introspection", "solitude", "guidance", "inner search", "contemplation"]
+            },
+            { 
+                number: 'X', 
+                title: 'Wheel of Fortune',
+                meanings: {
+                    mystical: "The cosmic wheel turns according to divine timing, bringing souls to their appointed destinies. What seems like chance is part of a greater celestial pattern.",
+                    analytical: "External circumstances are shifting in ways beyond your control. Adapt to these changes rather than resisting them, recognizing opportunity within uncertainty.",
+                    poetic: "Up and down, round and round, the eternal dance of fate and free will. As the wheel turns, yesterday's pinnacle becomes tomorrow's foundation, teaching the wisdom of cycles.",
+                    direct: "Your circumstances are changing. Be ready to adapt quickly and take advantage of new opportunities. This phase won't last forever.",
+                    psychological: "The Wheel of Fortune represents the cyclical nature of experience and your relationship with change. Consider how attachment to particular outcomes might be preventing you from flowing with natural cycles."
+                },
+                keywords: ["change", "cycles", "fate", "turning point", "luck"]
+            },
+            { 
+                number: 'XI', 
+                title: 'Justice',
+                meanings: {
+                    mystical: "The universal scales measure every action against cosmic law. What transpires now is the sacred balancing of karmic energies set in motion long ago.",
+                    analytical: "Cause and effect are at work in your current situation. Consider the logical consequences of your choices and ensure you're being objective in your assessments.",
+                    poetic: "The sword that divides truth from illusion cuts through the tangled web of perception. In perfect balance, the scales reveal what is, not what we wish to see.",
+                    direct: "You're experiencing the consequences of past actions. Be honest and fair in your current decisions. Legal matters may require attention.",
+                    psychological: "Justice represents your relationship with truth and fairness. Examine whether you're being objective about your responsibility in situations rather than externalizing blame or credit."
+                },
+                keywords: ["justice", "fairness", "truth", "cause and effect", "law"]
+            },
+            { 
+                number: 'XII', 
+                title: 'The Hanged Man',
+                meanings: {
+                    mystical: "Suspended between worlds, you access divine wisdom through the surrender of ego. What seems like sacrifice is the threshold to cosmic consciousness.",
+                    analytical: "A shift in perspective would be valuable now. Consider what insights might emerge if you stopped trying to force solutions and instead observed from a different angle.",
+                    poetic: "Upside down, the world reveals its hidden truths. The tree of sacrifice bears the fruit of wisdom for those willing to hang between heaven and earth, surrendering to the between.",
+                    direct: "Let go of your need to control this situation. By surrendering and waiting, you'll gain insights that action would have prevented you from seeing.",
+                    psychological: "The Hanged Man represents voluntary surrender and the dissolution of rigid thought patterns. Consider where your attachment to a particular self-image might be preventing growth."
+                },
+                keywords: ["surrender", "new perspective", "suspended action", "sacrifice"]
+            },
+            { 
+                number: 'XIII', 
+                title: 'Death',
+                meanings: {
+                    mystical: "The veil between worlds thins as one cycle completes its sacred purpose. Through spiritual death, the soul sheds its old form to emerge reborn.",
+                    analytical: "A significant phase or aspect of your life is coming to a natural conclusion. Embrace this ending as necessary for new growth and opportunities to emerge.",
+                    poetic: "The final leaf falls not in tragedy but in perfect timing, feeding the roots that will nurture spring's inevitable rebirth. What ends makes space for the unwritten story.",
+                    direct: "Something in your life needs to end completely before you can move forward. Stop holding on to what's already finished.",
+                    psychological: "Death represents necessary endings and your capacity to release attachment. Examine where you might be resisting inevitable change due to fear of the unknown."
+                },
+                keywords: ["endings", "change", "transformation", "transition", "letting go"]
+            },
+            { 
+                number: 'XIV', 
+                title: 'Temperance',
+                meanings: {
+                    mystical: "The alchemical angel transmutes opposing elements into divine harmony. Through sacred moderation, the soul achieves equilibrium between cosmic forces.",
+                    analytical: "Balance and moderation will serve you well now. Consider how to integrate seemingly opposing factors rather than choosing between extremes.",
+                    poetic: "Between fire and water, a rainbow bridge forms. The dance of opposites creates not conflict but harmony when guided by the patient hand of equilibrium.",
+                    direct: "Find middle ground in this situation. Avoid extremes and practice patience. Gradual integration works better than radical action now.",
+                    psychological: "Temperance represents psychological integration and healthy moderation. Consider how you might better balance different aspects of yourself rather than identifying exclusively with certain qualities."
+                },
+                keywords: ["balance", "moderation", "patience", "purpose", "harmony"]
+            },
+            { 
+                number: 'XV', 
+                title: 'The Devil',
+                meanings: {
+                    mystical: "The shadow guardian reveals the attachments that bind your spirit to illusion. What seems like temptation is truly an initiation into deeper self-knowledge.",
+                    analytical: "Examine where you may feel trapped by material concerns or unhealthy patterns. Consider what self-imposed limitations you're accepting as immutable reality.",
+                    poetic: "Chains of gold that bind yet hang loose around the willing captives. The horned one laughs not at your bondage but at how easily you could lift these shackles of desire.",
+                    direct: "You're trapped in a self-imposed pattern or addiction. Recognize that you have the power to break free from what's holding you back.",
+                    psychological: "The Devil represents your relationship with shadow material and the unconscious forces that influence behavior. Examine what disowned aspects of self might be operating from the unconscious to create repeated patterns."
+                },
+                keywords: ["bondage", "addiction", "materialism", "shadow self"]
+            },
+            { 
+                number: 'XVI', 
+                title: 'The Tower',
+                meanings: {
+                    mystical: "Divine lightning shatters the edifice of false consciousness. Through sudden awakening, illusions crumble to reveal the eternal truth that was always present.",
+                    analytical: "A sudden disruption will clear away outmoded structures or beliefs. Though potentially jarring, this change creates space for something more authentic to emerge.",
+                    poetic: "The lightning that breaks the stone tower frees the prisoners within. From falling ashes, birds of revelation take flight, no longer contained by walls of manufactured certainty.",
+                    direct: "Prepare for a sudden change or revelation that will disrupt your plans. This upheaval is necessary to break you out of a false or limiting situation.",
+                    psychological: "The Tower represents the collapse of artificially maintained psychological structures. Consider whether your current identity or worldview requires sudden revision in light of new information."
+                },
+                keywords: ["sudden change", "revelation", "upheaval", "awakening", "liberation"]
+            },
+            { 
+                number: 'XVII', 
+                title: 'The Star',
+                meanings: {
+                    mystical: "Celestial light flows through you into the waters of creation. After trial comes renewal, as the cosmic gift of hope illuminates your spiritual path.",
+                    analytical: "Following a period of challenge, renewal and optimism are emerging. Maintain faith in your direction while staying connected to both intuition and practical needs.",
+                    poetic: "Naked before the cosmos, the soul pours forth its gifts without reservation. The stars mirror themselves in still waters, reminding us that heaven and earth are reflections of one truth.",
+                    direct: "Have faith that you're on the right path. A period of healing and renewed hope is beginning. Trust in your future even when you can't see the exact destination.",
+                    psychological: "The Star represents authentic expression and connection to transpersonal meaning. Consider how vulnerability might actually be your strength, allowing for genuine connection and renewal."
+                },
+                keywords: ["hope", "inspiration", "serenity", "renewal", "spirituality"]
+            },
+            { 
+                number: 'XVIII', 
+                title: 'The Moon',
+                meanings: {
+                    mystical: "The lunar gateway opens to reveal the tides of the unconscious realm. Through dreams and visions, the soul navigates the mysterious waters between worlds.",
+                    analytical: "Unconscious patterns or fears may be influencing your perception now. Pay attention to dreams and intuition while being careful not to project assumptions onto ambiguous situations.",
+                    poetic: "Howling at the edge of knowing, creatures of instinct follow the silver path across dark waters. What seems monstrous in shadow may be guardian in light; the moon keeps her secrets and changes her face.",
+                    direct: "Don't trust everything at face value right now. Your fears and subconscious patterns are affecting how you see the situation. Wait for clarity before making major decisions.",
+                    psychological: "The Moon represents the realm of the unconscious and collective imagination. Examine how projections, ancestral patterns, or unacknowledged fears might be creating illusions in your current experience."
+                },
+                keywords: ["illusion", "fear", "subconscious", "intuition", "dreams"]
+            },
+            { 
+                number: 'XIX', 
+                title: 'The Sun',
+                meanings: {
+                    mystical: "The divine light of universal consciousness illuminates all shadows. Your true essence radiates without obstruction, revealing the sacred unity of all existence.",
+                    analytical: "Clarity and vitality are available to you now. This is an excellent time for authentic self-expression and bringing your unique contributions into the light of awareness.",
+                    poetic: "Dancing in the garden of infinite possibility, the soul remembers its radiant nature. No cloud can long obscure the golden truth that shines from within and without.",
+                    direct: "Success and happiness are available to you now. Express yourself authentically and celebrate your achievements. The clarity you sought is arriving.",
+                    psychological: "The Sun represents integration of conscious and unconscious aspects into authentic wholeness. Consider how acceptance of all parts of yourself enables more genuine expression and vitality."
+                },
+                keywords: ["success", "joy", "celebration", "vitality", "enlightenment"]
+            },
+            { 
+                number: 'XX', 
+                title: 'Judgement',
+                meanings: {
+                    mystical: "The cosmic trumpet calls souls to awakening and divine accounting. Through sacred discernment, you rise renewed toward your higher purpose.",
+                    analytical: "A significant realization is prompting you to reassess your life choices in light of your true calling. Consider what aspects of your past inform your purpose moving forward.",
+                    poetic: "From the opened graves of past selves, the essential spirit rises to meet its higher calling. The angel's trumpet heralds not an end but a reckoning that leads to rebirth.",
+                    direct: "It's time for self-evaluation and answering a higher calling. Make decisions based on your authentic purpose rather than external expectations.",
+                    psychological: "Judgement represents integration of past experiences into a coherent self-narrative that informs purpose. Consider how reframing your life story might reveal a clearer sense of meaning and direction."
+                },
+                keywords: ["reckoning", "awakening", "renewal", "purpose", "calling"]
+            },
+            { 
+                number: 'XXI', 
+                title: 'The World',
+                meanings: {
+                    mystical: "The cosmic dance completes its sacred cycle as you stand at the center of all elements in perfect harmony. Wholeness is achieved as the many return to the one.",
+                    analytical: "A significant phase reaches completion, bringing a sense of wholeness and accomplishment. Take time to acknowledge this fulfillment before embarking on new cycles.",
+                    poetic: "The dance comes full circle as the cosmos celebrates within and without. Every step, every lesson weaves into the tapestry of completion that is never truly an ending.",
+                    direct: "You've reached an important milestone or completion. Celebrate your accomplishments before beginning the next chapter. Integration of your experiences leads to wisdom.",
+                    psychological: "The World represents psychological wholeness and the integration of all aspects of self. Consider how this completion prepares you for new cycles of growth from a foundation of greater wholeness."
+                },
+                keywords: ["completion", "achievement", "fulfillment", "wholeness", "integration"]
+            }
+        ];
+        
+        // Sample interpretations for different spread types
+        const spreadInterpretations = {
+            single: {
+                mystical: "This singular arcanum reveals the essence of your spiritual journey at this moment. Its solitary presence speaks volumes about the cosmic forces shaping your path.",
+                analytical: "This single card highlights the key factor or energy most relevant to your current situation. Consider how this influence might be affecting multiple areas of your question.",
+                poetic: "A single star in the vast night sky, guiding your journey across uncharted waters. This card sings its solitary melody, revealing the heart of what matters now.",
+                direct: "This card shows the most important thing you need to know right now. Focus on this central theme to address your question.",
+                psychological: "This card represents the core psychological pattern or energy currently most active in your psyche. How it manifests depends on your level of conscious engagement with it."
+            },
+            three: {
+                mystical: "The sacred trinity of past, present, and future reveals itself through these three arcana. Together they form a cosmic narrative of your soul's journey.",
+                analytical: "These three cards represent the situation's development: influences leading to your current position, the present circumstances, and the potential direction based on current energies.",
+                poetic: "Three notes forming a chord of meaning, each voice distinct yet harmonizing into a single truth. The story unfolds from what was, through what is, into what may yet be.",
+                direct: "The first card shows what led to this situation, the second reveals your current position, and the third indicates where things are heading if you continue on this path.",
+                psychological: "These cards reveal the psychological progression of your situation: the underlying patterns that created it, your current conscious experience, and the potential integration or outcome as energies evolve."
+            },
+            five: {
+                mystical: "The sacred pentagram of forces aligns to reveal the complex energies surrounding your question. Each position illuminates a different aspect of the cosmic pattern at work.",
+                analytical: "This five-card spread offers a comprehensive view: central theme, opposing forces, foundation, past influence, and potential outcome. Together they provide context for more nuanced understanding.",
+                poetic: "Five points of light forming a star of insight, each ray illuminating a different shadow and secret. The center holds the question while the four directions offer their wisdom.",
+                direct: "The center card shows the core issue. The top shows your ideal outcome, the bottom shows what's underneath the situation. The left shows what's leaving, and the right shows what's coming in.",
+                psychological: "This spread maps the psychological landscape of your question: the core complex (center), the conscious attitude (top), unconscious influences (bottom), what's being integrated (left), and what's emerging into awareness (right)."
+            }
+        };
+        
+        // Theme keywords for natural language processing simulation
+        const themeKeywords = {
+            love: ["relationship", "partner", "romance", "connection", "attraction", "dating", "marriage", "breakup", "soulmate", "commitment"],
+            career: ["job", "work", "promotion", "business", "professional", "interview", "company", "career", "workplace", "colleagues", "boss"],
+            spirituality: ["spiritual", "higher", "purpose", "meaning", "meditation", "practice", "soul", "divine", "growth", "awakening", "consciousness"],
+            health: ["health", "wellness", "healing", "body", "mental", "physical", "illness", "recovery", "balance", "energy", "vitality"],
+            finances: ["money", "financial", "investment", "debt", "abundance", "prosperity", "wealth", "savings", "income", "spending"],
+            creativity: ["creative", "artist", "project", "inspiration", "expression", "art", "writing", "music", "block", "ideas", "creating"]
+        };
+        
+        // Simple NLP function to identify themes in user input
+        function identifyThemes(input) {
+            if (!input) return ["general"];
+            
+            const lowercaseInput = input.toLowerCase();
+            const detectedThemes = [];
+            
+            for (const [theme, keywords] of Object.entries(themeKeywords)) {
+                if (keywords.some(keyword => lowercaseInput.includes(keyword))) {
+                    detectedThemes.push(theme);
+                }
+            }
+            
+            // If no specific themes detected, return general
+            return detectedThemes.length > 0 ? detectedThemes : ["general"];
+        }
+        
+        // Function to generate an interpretation based on cards, theme, and style
+        function generateInterpretation(cards, themes, style) {
+            let interpretation = "";
+            const spreadType = cards.length === 1 ? "single" : cards.length === 3 ? "three" : "five";
+            
+            // Add spread-type specific interpretation
+            interpretation += spreadInterpretations[spreadType][style] + "\n\n";
+            
+            // Add card-specific interpretations
+            if (spreadType === "single") {
+                const card = cards[0];
+                const cardData = cardData.find(c => c.title === card.title);
+                interpretation += cardData.meanings[style];
+            } else if (spreadType === "three") {
+                // Past, Present, Future interpretation
+                interpretation += "First card (Past/Influence): " + cardData.find(c => c.title === cards[0].title).meanings[style] + "\n\n";
+                interpretation += "Second card (Present/Situation): " + cardData.find(c => c.title === cards[1].title).meanings[style] + "\n\n";
+                interpretation += "Third card (Future/Outcome): " + cardData.find(c => c.title === cards[2].title).meanings[style];
+            } else {
+                // Five card spread
+                interpretation += "Center (Core Issue): " + cardData.find(c => c.title === cards[0].title).meanings[style] + "\n\n";
+                interpretation += "Above (Conscious/Ideal): " + cardData.find(c => c.title === cards[1].title).meanings[style] + "\n\n";
+                interpretation += "Below (Unconscious/Foundation): " + cardData.find(c => c.title === cards[2].title).meanings[style] + "\n\n";
+                interpretation += "Left (Passing Influence): " + cardData.find(c => c.title === cards[3].title).meanings[style] + "\n\n";
+                interpretation += "Right (Coming Influence): " + cardData.find(c => c.title === cards[4].title).meanings[style];
+            }
+            
+            // Add theme-specific insights
+            if (themes.includes("love")) {
+                interpretation += "\n\nRegarding your love life, these cards suggest ";
+                // Add love-specific interpretation based on the cards
+            }
+            
+            if (themes.includes("career")) {
+                interpretation += "\n\nIn your professional life, this reading indicates ";
+                // Add career-specific interpretation based on the cards
+            }
+            
+            return interpretation;
+        }
+        
+        // Basic functionality for spread selection
+        document.querySelectorAll('.spread-type').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                document.querySelectorAll('.spread-type').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                // Update spread based on selection
+                const spreadType = button.textContent.trim();
+                const tarotSpread = document.querySelector('.tarot-spread');
+                
+                // Clear current spread
+                tarotSpread.innerHTML = '';
+                
+                // Add appropriate number of cards
+                let cardCount = 1;
+                if (spreadType === 'THREE') cardCount = 3;
+                if (spreadType === 'FIVE') cardCount = 5;
+                
+                for (let i = 0; i < cardCount; i++) {
+                    tarotSpread.innerHTML += `
+                        <div class="card">
+                            <div class="card-placeholder">?</div>
+                        </div>
+                    `;
+                }
+                
+                // Clear interpretation
+                document.querySelector('.interpretation').innerHTML = '<div class="reading-theme">Select cards to reveal your reading</div>';
+            });
+        });
+        
+        // Track selected cards
+        let selectedCards = [];
+        
+        // Simulate card selection
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.card')) {
+                const card = e.target.closest('.card');
+                if (card.querySelector('.card-placeholder')) {
+                    // Array of sample cards
+                    const cards = cardData.map(card => ({ number: card.number, title: card.title }));
+                    
+                    // Select random card
+                    const randomCard = cards[Math.floor(Math.random() * cards.length)];
+                    selectedCards.push(randomCard);
+                    
+                    // Update card
+                    card.innerHTML = `
+                        <div class="card-number">${randomCard.number}</div>
+                        <div class="card-art">✦</div>
+                        <div class="card-title">${randomCard.title}</div>
+                    `;
+                    
+                    // Check if all cards are selected
+                    const totalCards = document.querySelectorAll('.card').length;
+                    const selectedCount = document.querySelectorAll('.card:not(:has(.card-placeholder))').length;
+                    
+                    if (selectedCount === totalCards) {
+                        // Get user's query
+                        const userQuery = document.querySelector('.query-input textarea').value;
+                        
+                        // Identify themes
+                        const themes = identifyThemes(userQuery);
+                        
+                        // Get selected interpretation style
+                        const style = document.querySelector('input[name="style"]:checked').value;
+                        
+                        // Generate interpretation
+                        const themeText = themes[0] !== "general" ? themes.join(", ") : "General insight";
+                        const interpretation = generateInterpretation(selectedCards, themes, style);
+                        
+                        // Update interpretation
+                        document.querySelector('.interpretation').innerHTML = `
+                            <div class="reading-theme">Theme: "${themeText}"</div>
+                            ${interpretation}
+                        `;
+                    }
+                }
+            }
+        });
+        
+        // New reading button
+        document.getElementById('new-reading-btn').addEventListener('click', () => {
+            // Reset selected cards
+            selectedCards = [];
+            
+            // Reset spread
+            const spreadType = document.querySelector('.spread-type.active').textContent.trim();
+            const tarotSpread = document.querySelector('.tarot-spread');
+            
+            // Clear current spread
+            tarotSpread.innerHTML = '';
+            
+            // Add appropriate number of cards
+            let cardCount = 1;
+            if (spreadType === 'THREE') cardCount = 3;
+            if (spreadType === 'FIVE') cardCount = 5;
+            
+            for (let i = 0; i < cardCount; i++) {
+                tarotSpread.innerHTML += `
+                    <div class="card">
+                        <div class="card-placeholder">?</div>
+                    </div>
+                `;
+            }
+            
+            // Clear interpretation
+            document.querySelector('.interpretation').innerHTML = '<div class="reading-theme">Select cards to reveal your reading</div>';
+        });
+        
+        // Save reading button
+        document.getElementById('save-reading-btn').addEventListener('click', () => {
+            // Check if all cards are selected
+            const totalCards = document.querySelectorAll('.card').length;
+            const selectedCount = document.querySelectorAll('.card:not(:has(.card-placeholder))').length;
+            
+            if (selectedCount === totalCards) {
+                const interpretation = document.querySelector('.interpretation').textContent;
+                const userQuery = document.querySelector('.query-input textarea').value || "General reading";
+                const cardTitles = Array.from(document.querySelectorAll('.card .card-title')).map(el => el.textContent);
+                const spreadType = document.querySelector('.spread-type.active').textContent.trim();
+                
+                // Create reading date
+                const now = new Date();
+                const date = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}.${now.getFullYear()}`;
+                
+                // Create reading entry
+                const readingItem = document.createElement('li');
+                readingItem.className = 'reading-item';
+                
+                const title = spreadType === 'SINGLE' 
+                    ? `Single Card Reading: ${cardTitles[0]}`
+                    : `${spreadType} Card Reading: ${cardTitles.join(', ')}`;
+                
+                readingItem.innerHTML = `
+                    <span>${title}</span>
+                    <div class="reading-meta">
+                        <span class="reading-date">${date}</span>
+                        <div class="reading-actions">
+                            <button class="view-reading">View</button>
+                            <button class="delete-reading">Delete</button>
+                        </div>
+                    </div>
+                `;
+                
+                // Store reading data
+                readingItem.dataset.cards = JSON.stringify(cardTitles);
+                readingItem.dataset.query = userQuery;
+                readingItem.dataset.interpretation = interpretation;
+                readingItem.dataset.date = date;
+                readingItem.dataset.spreadType = spreadType;
+                
+                // Add to reading list
+                document.getElementById('reading-journal').prepend(readingItem);
+                
+                // Update trends
+                updateTrends();
+                
+                alert('Reading saved to your journal');
+            } else {
+                alert('Please complete the reading before saving');
+            }
+        });
+        
+        // View reading
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('view-reading')) {
+                const readingItem = e.target.closest('.reading-item');
+                const modal = document.getElementById('reading-modal');
+                
+                // Populate modal with reading details
+                modal.querySelector('.modal-date').textContent = readingItem.dataset.date;
+                modal.querySelector('.modal-query').textContent = `Query: "${readingItem.dataset.query}"`;
+                modal.querySelector('.modal-spread-type').textContent = `${readingItem.dataset.spreadType} Card Reading`;
+                
+                // Format cards
+                const cards = JSON.parse(readingItem.dataset.cards);
+                modal.querySelector('.modal-cards').innerHTML = cards.map(card => `<p>${card}</p>`).join('');
+                
+                // Set interpretation
+                modal.querySelector('.modal-interpretation').textContent = readingItem.dataset.interpretation;
+                
+                // Show modal
+                modal.style.display = 'block';
+            }
+        });
+        
+        // Delete reading
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-reading')) {
+                const readingItem = e.target.closest('.reading-item');
+                if (confirm('Are you sure you want to delete this reading?')) {
+                    readingItem.remove();
+                    updateTrends();
+                }
+            }
+        });
+        
+        // Close modal
+        document.querySelector('.close-modal').addEventListener('click', () => {
+            document.getElementById('reading-modal').style.display = 'none';
+        });
+        
+        // Update trend tags based on reading history
+        function updateTrends() {
+            // In a real app, this would analyze all saved readings to find patterns
+            // For this demo, we'll just have static tags
+            const trendTags = ['Transformation', 'New Beginnings', 'Spiritual Growth', 
+                              'Relationships', 'Career', 'Self-Discovery'];
+            
+            // Update UI (would normally update based on actual data)
+            document.querySelector('.trend-tags').innerHTML = trendTags.map(tag => 
+                `<div class="trend-tag">${tag}</div>`
+            ).join('');
+        }
+        
+        // Okta authentication functions
+        async function initOkta() {
+            // In a real implementation, you would initialize the Okta SDK here
+            console.log('Initializing Okta authentication...');
+            
+            // Check for authentication tokens in URL or session storage
+            const isAuthenticated = checkAuthStatus();
+            updateAuthStatus(isAuthenticated);
+            
+            if (isAuthenticated && !OPENAI_API_KEY) {
+                // In a real implementation, you would retrieve the API key from your secure backend
+                OPENAI_API_KEY = 'placeholder_api_key_would_be_obtained_securely';
+            }
+        }
+        
+        function checkAuthStatus() {
+            // In a real implementation, this would check Okta tokens
+            const authStatus = sessionStorage.getItem('auth_status');
+            return authStatus === 'authenticated';
+        }
+        
+        function updateAuthStatus(isAuthenticated) {
+            const authStatusElement = document.querySelector('.auth-status');
+            const loginButton = document.querySelector('.login-btn');
+            
+            if (isAuthenticated) {
+                const userEmail = sessionStorage.getItem('user_email') || 'user@example.com';
+                authStatusElement.textContent = `Signed in as ${userEmail}`;
+                loginButton.textContent = 'LOGOUT';
+            } else {
+                authStatusElement.textContent = 'Not signed in';
+                loginButton.textContent = 'LOGIN';
+            }
+        }
+        
+        function simulateLogin() {
+            // In a real implementation, this would redirect to Okta login
+            sessionStorage.setItem('auth_status', 'authenticated');
+            sessionStorage.setItem('user_email', 'user@example.com');
+            OPENAI_API_KEY = 'placeholder_api_key_would_be_obtained_securely';
+            updateAuthStatus(true);
+        }
+        
+        function simulateLogout() {
+            // In a real implementation, this would sign out from Okta
+            sessionStorage.removeItem('auth_status');
+            sessionStorage.removeItem('user_email');
+            OPENAI_API_KEY = '';
+            updateAuthStatus(false);
+        }
+        
+        // AI-powered Reading Generator with GPT-4o Mini
+        async function generateAIReading(query, cardTitles, style) {
+            // Create a loading state
+            const interpretation = document.querySelector('.interpretation');
+            interpretation.innerHTML = '<div class="reading-theme">Analyzing...</div><div style="text-align: center; margin: 2rem 0;">Consulting the celestial algorithm...</div>';
+            
+            try {
+                // If API key is available, use OpenAI; otherwise, fall back to local generation
+                if (OPENAI_API_KEY) {
+                    // Get the themes from the query for the prompt
+                    const themes = identifyThemes(query);
+                    const themeText = themes[0] !== "general" ? themes.join(", ") : "General insight";
+                    
+                    // Format card info for the prompt
+                    const cardInfo = cardTitles.map(title => {
+                        const card = cardData.find(c => c.title === title);
+                        return `${card.title} (${card.number}): ${card.keywords.join(', ')}`;
+                    }).join('\n');
+                    
+                    // Construct the prompt for GPT-4o Mini
+                    const prompt = `You are an insightful tarot reader with a ${style} interpretive style. 
+                    The querent asks: "${query}"
+                    
+                    Their reading includes the following cards:
+                    ${cardInfo}
+                    
+                    The identified themes in their question are: ${themeText}
+                    
+                    Provide a cohesive and insightful tarot reading that:
+                    1. Addresses their specific question
+                    2. Interprets each card in relation to their question
+                    3. Shows how the cards interact with each other
+                    4. Offers specific guidance based on the reading
+                    5. Maintains a ${style} tone and approach throughout
+                    
+                    Your response should be deep, personalized, and genuinely helpful.`;
+                    
+                    // Call OpenAI API
+                    const response = await callOpenAI(prompt);
+                    
+                    // Update interpretation with AI response
+                    interpretation.innerHTML = `
+                        <div class="reading-theme">Theme: "${themeText}"</div>
+                        ${response}
+                        <div class="deeper-insight-button">Seek deeper insight...</div>
+                    `;
+                } else {
+                    // Fall back to local generation if no API key
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    const themes = identifyThemes(query);
+                    const themeText = themes[0] !== "general" ? themes.join(", ") : "General insight";
+                    
+                    const cardObjects = cardTitles.map(title => {
+                        return { 
+                            title: title, 
+                            number: cardData.find(c => c.title === title)?.number || '0' 
+                        };
+                    });
+                    
+                    // Generate interpretation locally
+                    const aiResponse = generateInterpretation(cardObjects, themes, style);
+                    
+                    interpretation.innerHTML = `
+                        <div class="reading-theme">Theme: "${themeText}"</div>
+                        ${aiResponse}
+                        <div class="deeper-insight-button">Seek deeper insight...</div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error generating reading:', error);
+                interpretation.innerHTML = `
+                    <div class="reading-theme">Error</div>
+                    <p>Sorry, we couldn't generate your reading. Please try again later.</p>
+                `;
+            }
+        }
+        
+        // Call OpenAI API with GPT-4o Mini
+        async function callOpenAI(prompt) {
+            try {
+                // In a real implementation, this would be a secure server-side call
+                // Client-side API calls are not secure for production
+                console.log('Would call OpenAI with prompt:', prompt);
+                
+                // This would be the actual API call in production:
+                /*
+                const response = await fetch(OPENAI_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4o-mini',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are an insightful tarot reader with expertise in interpreting cards.'
+                            },
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 800
+                    })
+                });
+                
+                const data = await response.json();
+                return data.choices[0].message.content;
+                */
+                
+                // For demo, return enhanced sample reading
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Sample GPT-4o Mini style response
+                return `
+                <p>As I connect with the celestial energies surrounding your query, I'm struck by the profound synchronicity of these cards appearing for you at this moment.</p>
+                
+                <p>The Hanged Man has appeared as a powerful messenger, suspended between worlds to offer you a unique vantage point. This card speaks directly to your current situation, suggesting that what appears to be a limitation is actually an invitation to see everything from a radically different angle.</p>
+                
+                <p>I sense you're at a crossroads where conventional approaches no longer serve you. The universe is asking you to surrender control—not as an act of defeat, but as a profound spiritual strategy. When we release our grip on how things "should" be, we create space for divine wisdom to enter.</p>
+                
+                <p>This period of suspension isn't meant to be permanent. It's a sacred pause designed to realign you with your higher purpose. The sacrifice this card suggests isn't about losing something valuable, but about exchanging the immediate for the eternal.</p>
+                
+                <p>Looking deeper into the mystical symbolism, notice how The Hanged Man hangs willingly, with a peaceful expression and a halo of illumination. This suggests that your current limitations contain hidden blessings if viewed with the right perspective.</p>
+                
+                <p>My guidance for you: Embrace this period of waiting as a gift rather than an obstacle. Practice radical acceptance of your current circumstances while remaining open to the insights that come only through stillness. When you stop struggling against the current, you'll discover that you're being carried exactly where you need to go.</p>`;
+            } catch (error) {
+                console.error('OpenAI API error:', error);
+                throw new Error('Failed to generate AI reading');
+            }
+        }
+        
+        // Draw Cards Button
+        document.getElementById('draw-cards-btn').addEventListener('click', async () => {
+            const userQuery = document.querySelector('.query-input textarea').value;
+            
+            if (!userQuery.trim()) {
+                alert('Please enter a question or topic first');
+                return;
+            }
+            
+            // Get selected spread type
+            const spreadType = document.querySelector('.spread-type.active').textContent.trim();
+            const tarotSpread = document.querySelector('.tarot-spread');
+            
+            // Get all cards with placeholders
+            const cards = Array.from(document.querySelectorAll('.card'));
+            
+            // Check if there are cards with placeholders
+            if (cards.length === 0 || !cards.some(card => card.querySelector('.card-placeholder'))) {
+                return;
+            }
+            
+            // Clear selected cards array
+            selectedCards = [];
+            
+            // Simulate drawing all cards at once
+            for (const card of cards) {
+                if (card.querySelector('.card-placeholder')) {
+                    // Select random card
+                    const randomCardIndex = Math.floor(Math.random() * cardData.length);
+                    const randomCard = cardData[randomCardIndex];
+                    selectedCards.push({ number: randomCard.number, title: randomCard.title });
+                    
+                    // Update card with animation effect
+                    card.style.transform = 'rotateY(90deg)';
+                    setTimeout(() => {
+                        card.innerHTML = `
+                            <div class="card-number">${randomCard.number}</div>
+                            <div class="card-art">✦</div>
+                            <div class="card-title">${randomCard.title}</div>
+                        `;
+                        card.style.transform = 'rotateY(0deg)';
+                    }, 200);
+                    
+                    // Add slight delay between cards
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+            }
+            
+            // Get selected interpretation style
+            const style = document.querySelector('input[name="style"]:checked').value;
+            
+            // Generate AI reading after all cards are drawn
+            const cardTitles = selectedCards.map(card => card.title);
+            generateAIReading(userQuery, cardTitles, style);
+        });
+        
+        // Deeper Insight Button
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('deeper-insight-button')) {
+                document.getElementById('paywall-overlay').style.display = 'flex';
+            }
+        });
+        
+        // Close Paywall
+        document.getElementById('close-paywall').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('paywall-overlay').style.display = 'none';
+        });
+        
+        // Subscribe Button
+        document.getElementById('subscribe-button').addEventListener('click', () => {
+            alert('This is a demo. In a real application, this would redirect to a payment processor.');
+            document.getElementById('paywall-overlay').style.display = 'none';
+        });
+        
+        // Initialize Okta on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initOkta();
+        });
+        
+        // Login button
+        document.querySelector('.login-btn').addEventListener('click', () => {
+            const authStatus = document.querySelector('.auth-status');
+            if (authStatus.textContent === 'Not signed in') {
+                // Simulate Okta login flow
+                simulateLogin();
+            } else {
+                // Simulate Okta logout flow
+                simulateLogout();
+            }
+        });
+    </script>
+</body>
+</html>

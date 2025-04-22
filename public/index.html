@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETHER • TAROT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Victor+Mono:ital,wght@0,200;0,400;0,700;1,200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <button class="login-btn">LOGIN</button>
+    
+    <header>
+        <h1>ETHER • TAROT</h1>
+        <div class="ornament">
+            <span>★</span><span>✧</span><span>★</span>
+        </div>
+        <div class="auth-status">Not signed in</div>
+    </header>
+    
+    <main>
+        <div class="query-input">
+            <textarea placeholder="What question or topic would you like insight on? (e.g., love, career, personal growth)"></textarea>
+            
+            <div class="interpretation-style">
+                <label>
+                    <input type="radio" name="style" value="mystical" checked>
+                    Mystical
+                </label>
+                <label>
+                    <input type="radio" name="style" value="analytical">
+                    Analytical
+                </label>
+                <label>
+                    <input type="radio" name="style" value="poetic">
+                    Poetic
+                </label>
+                <label>
+                    <input type="radio" name="style" value="direct">
+                    Direct
+                </label>
+                <label>
+                    <input type="radio" name="style" value="psychological">
+                    Psychological
+                </label>
+            </div>
+        </div>
+        
+        <div class="spread-selector">
+            <button class="spread-type active">SINGLE</button>
+            <button class="spread-type">THREE</button>
+            <button class="spread-type">FIVE</button>
+        </div>
+        
+        <div class="tarot-spread">
+            <div class="card">
+                <div class="card-placeholder">?</div>
+            </div>
+        </div>
+        
+        <div class="interpretation">
+            <div class="reading-theme">Enter your question and draw cards to begin</div>
+        </div>
+        
+        <div class="actions">
+            <button id="new-reading-btn">New Reading</button>
+            <button id="draw-cards-btn">Draw Cards</button>
+            <button id="save-reading-btn">Save Reading</button>
+        </div>
+        
+        <div class="journal">
+            <h2>Journal</h2>
+            <ul class="reading-list" id="reading-journal">
+                <!-- Readings will be loaded here -->
+            </ul>
+        </div>
+        
+        <div class="trends">
+            <h2>Recurring Themes</h2>
+            <div class="trend-tags">
+                <!-- Trend tags will be loaded here -->
+            </div>
+        </div>
+    </main>
+    
+    <div id="reading-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Reading Details</h2>
+            <div class="modal-date"></div>
+            <div class="modal-query"></div>
+            <div class="modal-spread-type"></div>
+            <div class="modal-cards"></div>
+            <div class="modal-interpretation"></div>
+        </div>
+    </div>
+    
+    <div id="paywall-overlay" class="paywall-overlay">
+        <div class="paywall-content">
+            <div class="paywall-title">DEEPER INSIGHTS AWAIT</div>
+            <p>Unlock premium GPT-4o insights with our subscription:</p>
+            <ul style="text-align: left; margin: 1rem 0;">
+                <li>Advanced AI-powered in-depth interpretations</li>
+                <li>Direct integration with OpenAI's GPT-4o Mini</li>
+                <li>Personalized psychological analysis</li>
+                <li>Unlimited premium readings</li>
+                <li>Exclusive spreads and interpretation styles</li>
+                <li>Save unlimited readings to your journal</li>
+            </ul>
+            <button id="subscribe-button">Subscribe - $9.99/month</button>
+            <div style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">
+                <a href="#" id="close-paywall">Return to free reading</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="ornament">
+            <span>✧</span><span>✦</span><span>✧</span>
+        </div>
+        <p>© 2025 ETHER • TAROT</p>
+    </footer>
+
+    <!-- Load card data -->
+    <script src="/js/card-data.js"></script>
+    
+    <!-- Load API client -->
+    <script src="/js/tarot-api.js"></script>
+    
+    <!-- Load main application code -->
+    <script src="/js/main.js"></script>
+</body>
+</html>
