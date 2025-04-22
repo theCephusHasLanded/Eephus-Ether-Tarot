@@ -19,96 +19,34 @@ class TarotAPI {
    */
   async init() {
     try {
-      // Check authentication status
-      await this.checkAuthStatus();
+      // Use the authClient for authentication state
+      this.authState.isAuthenticated = window.authClient.isAuthenticated;
+      this.authState.user = window.authClient.user;
+      
+      // Listen for authentication changes
+      document.addEventListener('auth:statusChanged', () => {
+        this.authState.isAuthenticated = window.authClient.isAuthenticated;
+        this.authState.user = window.authClient.user;
+      });
     } catch (error) {
       console.error('Error initializing API client:', error);
     }
   }
   
   /**
-   * Check the current authentication status
+   * Login is now handled by the authClient
+   * This is kept for backward compatibility
    */
-  async checkAuthStatus() {
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/auth/me`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        this.authState.isAuthenticated = true;
-        this.authState.user = data.data;
-        return true;
-      } else {
-        this.authState.isAuthenticated = false;
-        this.authState.user = null;
-        return false;
-      }
-    } catch (error) {
-      console.error('Error checking auth status:', error);
-      this.authState.isAuthenticated = false;
-      this.authState.user = null;
-      return false;
-    }
+  async login() {
+    return window.authClient.login();
   }
   
   /**
-   * Simulated login for demo purposes
-   */
-  async login(email = 'user@example.com') {
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/auth/demo-login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email }),
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        this.authState.isAuthenticated = true;
-        this.authState.user = data.data.user;
-        return data;
-      } else {
-        throw new Error('Login failed');
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
-  }
-  
-  /**
-   * Logout the current user
+   * Logout is now handled by the authClient
+   * This is kept for backward compatibility
    */
   async logout() {
-    try {
-      const response = await fetch(`${this.apiBaseUrl}/auth/demo-logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        this.authState.isAuthenticated = false;
-        this.authState.user = null;
-        return true;
-      } else {
-        throw new Error('Logout failed');
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      throw error;
-    }
+    return window.authClient.logout();
   }
   
   /**

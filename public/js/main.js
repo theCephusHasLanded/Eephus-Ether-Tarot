@@ -141,16 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
   // Handle login/logout
   async function handleAuthClick() {
     try {
-      if (api.authState.isAuthenticated) {
-        await api.logout();
+      // Use the authClient for authentication
+      if (window.authClient.isAuthenticated) {
+        await window.authClient.logout();
       } else {
-        await api.login();
+        await window.authClient.login();
       }
       
-      updateAuthUI();
+      // The UI will be updated by the authClient
       
       // Load user data if authenticated
-      if (api.authState.isAuthenticated) {
+      if (window.authClient.isAuthenticated) {
         await Promise.all([
           loadSavedReadings(),
           loadTrends()

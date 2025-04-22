@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const path = require('path');
 const dotenv = require('dotenv');
 
@@ -41,6 +42,18 @@ app.use(express.json());
 
 // Parse cookies
 app.use(cookieParser());
+
+// Session management
+app.use(session({
+  secret: process.env.COOKIE_SECRET || 'tarot-session-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
 
 // Rate limiting
 const apiLimiter = rateLimit({
